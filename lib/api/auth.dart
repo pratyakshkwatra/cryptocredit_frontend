@@ -53,20 +53,24 @@ class AuthAPI {
     }
   }
 
-  Future<User> refreshAccessToken(String refreshToken) async {
+  Future<User?> refreshToken() async {
+    final refreshToken = await _storage.read(key: 'refresh_token');
+    log("test");
+    if (refreshToken == null) return null;
+
     try {
-      final response = await _dio.post(
+      final res = await _dio.post(
         '/auth/refresh_token',
         data: {'refresh_token': refreshToken},
-        options: Options(contentType: Headers.formUrlEncodedContentType),
       );
-
-      return User.fromJson(response.data);
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 401) {
-        throw UnauthorizedException('Session expired');
-      }
-      throw APIException(e.message ?? 'Token refresh failed');
+      await _storage.write(
+        key: 'access_token',
+        value: res.data['access_token'],
+      );
+      return User.fromJson(res.data);
+    } catch (error) {
+      await _storage.deleteAll();
+      return null;
     }
   }
 
