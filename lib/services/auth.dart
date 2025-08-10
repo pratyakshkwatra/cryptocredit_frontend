@@ -43,21 +43,10 @@ class AuthService {
   }
 
   Future<User?> initializeSession() async {
-    final refreshToken = await getRefreshToken();
-    if (refreshToken == null) return null;
-
-    try {
-      final user = await _authAPI.refreshAccessToken(refreshToken);
-      await _secureStorage.write(key: _accessTokenKey, value: user.accessToken);
-
-      return user;
-    } catch (e) {
-      await logout();
-      return null;
-    }
+    return await _authAPI.refreshToken();
   }
 
-  Future<void> registerAdmin(String email, String password) async {
+  Future<void> register(String email, String password) async {
     try {
       await _authAPI.signUp(email, password);
     } catch (e) {

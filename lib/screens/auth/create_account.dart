@@ -115,7 +115,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             setState(() => _isLoading = true);
                             try {
                               await widget.authService
-                                  .registerAdmin(
+                                  .register(
                                     _emailController.text,
                                     _passwordController.text,
                                   )

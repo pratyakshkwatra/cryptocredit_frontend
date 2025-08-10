@@ -1,4 +1,3 @@
-import 'package:cryptocredit/api/models/wallet.dart';
 
 class User {
   final int id;

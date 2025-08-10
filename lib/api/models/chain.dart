@@ -1,16 +1,19 @@
 class Chain {
-  final String chainShortName;
-  final String chainLongName;
+  final String name;
+  final String cId;
+  final String iconName;
 
   Chain({
-    required this.chainShortName,
-    required this.chainLongName,
+    required this.name,
+    required this.cId,
+    required this.iconName,
   });
 
   factory Chain.fromMapEntry(MapEntry<String, dynamic> entry) {
     return Chain(
-      chainShortName: entry.key,
-      chainLongName: entry.value.toString(),
+      name: entry.key,
+      cId: entry.value["c_id"],
+      iconName: entry.value["icon_name"],
     );
   }
 }
