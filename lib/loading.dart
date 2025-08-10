@@ -2,7 +2,6 @@ import 'package:cryptocredit/api/auth.dart';
 import 'package:cryptocredit/api/models/user.dart';
 import 'package:cryptocredit/screens/auth/login.dart';
 import 'package:cryptocredit/screens/home.dart';
-import 'package:cryptocredit/screens/score.dart';
 import 'package:cryptocredit/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -71,7 +70,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
             CircularProgressIndicator(
               strokeWidth: 8,
               color: Color(0xFF6A11CB),
-              year2023: false,
+              strokeCap: StrokeCap.round,
             ),
           ],
         ),
