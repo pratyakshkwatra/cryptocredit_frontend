@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:cryptocredit/api/api_client.dart';
 import 'package:cryptocredit/api/models/score.dart';

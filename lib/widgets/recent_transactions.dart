@@ -68,8 +68,8 @@ class _RecentTransactionsListState extends State<RecentTransactionsList>
         );
 
         final displayValue =
-            tx.value! /
-            BigInt.from(10).pow(tx.gasMetadata!.contractDecimals!).toDouble();
+            (tx.value! /
+            BigInt.from(10).pow(tx.gasMetadata!.contractDecimals!).toDouble()).roundToDouble();
 
         return FadeTransition(
           opacity: animation,
@@ -141,6 +141,7 @@ class _RecentTransactionsListState extends State<RecentTransactionsList>
         ),
         trailing: Text(
           amount,
+          
           style: GoogleFonts.inter(
             fontWeight: FontWeight.w600,
             fontSize: screenWidth * 0.035,

@@ -213,9 +213,8 @@ class _HomeScreenState extends State<HomeScreen>
                                           childAspectRatio: 1,
                                         ),
                                     itemBuilder: (context, chainIndex) {
-                                      final chain =
-                                          filteredChains[chainIndex];
-                              
+                                      final chain = filteredChains[chainIndex];
+
                                       final double itemStart =
                                           headerStart +
                                           (headerEnd - headerStart) *
@@ -226,7 +225,7 @@ class _HomeScreenState extends State<HomeScreen>
                                           (headerEnd - headerStart) *
                                               ((chainIndex + 1) /
                                                   filteredChains.length);
-                              
+
                                       final itemAnimation = CurvedAnimation(
                                         parent: _animationController,
                                         curve: Interval(
@@ -235,7 +234,7 @@ class _HomeScreenState extends State<HomeScreen>
                                           curve: Curves.easeOut,
                                         ),
                                       );
-                              
+
                                       return FadeTransition(
                                         opacity: itemAnimation,
                                         child: SlideTransition(
@@ -262,24 +261,15 @@ class _HomeScreenState extends State<HomeScreen>
                                             child: Container(
                                               height: 128,
                                               decoration: BoxDecoration(
-                                                color: const Color(
-                                                  0xFF1C1C1C,
-                                                ),
+                                                color: const Color(0xFF1C1C1C),
                                                 borderRadius:
                                                     BorderRadius.circular(16),
                                                 boxShadow: [
                                                   BoxShadow(
-                                                    color: Colors
-                                                        .grey
-                                                        .shade900
-                                                        .withValues(
-                                                          alpha: 0.1,
-                                                        ),
+                                                    color: Colors.grey.shade900
+                                                        .withValues(alpha: 0.1),
                                                     blurRadius: 8,
-                                                    offset: const Offset(
-                                                      0,
-                                                      4,
-                                                    ),
+                                                    offset: const Offset(0, 4),
                                                   ),
                                                 ],
                                                 border: Border.all(
@@ -314,8 +304,7 @@ class _HomeScreenState extends State<HomeScreen>
                                                       chain.name,
                                                     ).titleCase,
                                                     maxLines: 1,
-                                                    textAlign:
-                                                        TextAlign.center,
+                                                    textAlign: TextAlign.center,
                                                     softWrap: true,
                                                     overflow:
                                                         TextOverflow.ellipsis,
@@ -332,7 +321,7 @@ class _HomeScreenState extends State<HomeScreen>
                                       );
                                     },
                                   ),
-                              
+
                                   const SizedBox(height: 12),
                                 ],
                               ),
