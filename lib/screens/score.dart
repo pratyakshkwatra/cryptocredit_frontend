@@ -38,9 +38,15 @@ class _ScoreScreenState extends State<ScoreScreen> {
   late Future<Score> _scoreFuture;
   Map<String, dynamic> colors = getElegantColors(0);
 
+  Timer? _timer;
+  int _millisecondsElapsed = 0;
+
   @override
   void initState() {
     super.initState();
+
+    _startTimer();
+
     _scoreFuture = ScoreAPI()
         .getScore(
           chain: widget.chain.cId,
@@ -49,10 +55,33 @@ class _ScoreScreenState extends State<ScoreScreen> {
         )
         .then((score) {
           colors = getElegantColors(score.creditScore);
+
+          _stopTimer();
+
           setState(() {});
 
           return score;
         });
+  }
+
+  void _startTimer() {
+    _millisecondsElapsed = 0;
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(milliseconds: 10), (_) {
+      setState(() {
+        _millisecondsElapsed += 10;
+      });
+    });
+  }
+
+  void _stopTimer() {
+    _timer?.cancel();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -78,10 +107,24 @@ class _ScoreScreenState extends State<ScoreScreen> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
-                  child: CircularProgressIndicator(
-                    strokeWidth: 8,
-                    color: colors["primaryColor"],
-                    strokeCap: StrokeCap.round,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircularProgressIndicator(
+                        strokeWidth: 8,
+                        color: colors["primaryColor"],
+                        strokeCap: StrokeCap.round,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        "Loading... $_millisecondsElapsed ms",
+                        style: TextStyle(
+                          color: colors["primaryColor"],
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
                 );
               } else if (snapshot.hasError) {
