@@ -52,7 +52,7 @@ void showDataDialog(
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              if (icon != null) const SizedBox(width: 8),
+              if (icon != null) const SizedBox(width: 4),
               if (icon != null)
                 Icon(icon, color: colors["primaryColor"], size: 16),
             ],
@@ -99,7 +99,7 @@ void showDataDialog(
                     ),
                     labeledText(
                       'Average Tx Value',
-                      (score.details.txQuality.avgTxValue.toString()),
+                      (score.details.txQuality.avgTxValue.toStringAsFixed(2)),
                       icon: CryptoFontIcons.fromSymbol(chain.iconName),
                     ),
 
@@ -145,8 +145,9 @@ void showDataDialog(
                     ),
                     labeledText(
                       'Median Gas Price',
-                      (score.details.gasUsage.medianGasPrice as num)
-                          .toStringAsFixed(0),
+                      NumberFormat.compact().format(
+                        score.details.gasUsage.medianGasPrice,
+                      ),
                     ),
                     labeledText(
                       'Gas Price Ratio',

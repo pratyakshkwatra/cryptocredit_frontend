@@ -213,6 +213,8 @@ class _WalletsScreenState extends State<WalletsScreen>
                               child: ListTile(
                                 title: Text(
                                   wallet.nickname,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: GoogleFonts.inter(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600,
@@ -220,7 +222,7 @@ class _WalletsScreenState extends State<WalletsScreen>
                                   ),
                                 ),
                                 subtitle: Text(
-                                  shortenAddress(wallet.address),
+                                  shortenAddress(wallet.address, percentage: 0.4),
                                   style: GoogleFonts.inter(
                                     color: Colors.grey.shade400,
                                     fontWeight: FontWeight.w600,
