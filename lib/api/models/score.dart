@@ -13,8 +13,9 @@ class Score {
     return Score(
       creditScore: map['credit_score']?.toInt() ?? 0,
       details: Details.fromMap(map['details'] ?? {}),
-      transactions: map['transactions'] != null
-          ? (map['transactions'] as List<dynamic>)
+
+      transactions: map['txs'] != null
+          ? (map['txs'] as List<dynamic>)
                 .map((x) => Transaction.fromMap(x as Map<String, dynamic>))
                 .toList()
           : [],
@@ -27,14 +28,20 @@ class Details {
   final Diversification diversification;
   final WalletAge walletAge;
   final GasUsage gasUsage;
-  final LiquidityLockup liquidityLockup;
+
+  final TotalBalance totalBalance;
+  final IncomingOutgoing incomingOutgoing;
+  final InterTransactionTime interTransactionTime;
 
   Details({
     required this.txQuality,
     required this.diversification,
     required this.walletAge,
     required this.gasUsage,
-    required this.liquidityLockup,
+
+    required this.totalBalance,
+    required this.incomingOutgoing,
+    required this.interTransactionTime,
   });
 
   factory Details.fromMap(Map<String, dynamic> map) {
@@ -43,7 +50,14 @@ class Details {
       diversification: Diversification.fromMap(map['diversification'] ?? {}),
       walletAge: WalletAge.fromMap(map['wallet_age'] ?? {}),
       gasUsage: GasUsage.fromMap(map['gas_usage'] ?? {}),
-      liquidityLockup: LiquidityLockup.fromMap(map['liquidity_lockup'] ?? {}),
+
+      totalBalance: TotalBalance.fromMap(map['total_balance'] ?? {}),
+      incomingOutgoing: IncomingOutgoing.fromMap(
+        map['incoming_outgoing'] ?? {},
+      ),
+      interTransactionTime: InterTransactionTime.fromMap(
+        map['inter_transaction_time'] ?? {},
+      ),
     );
   }
 }
@@ -52,13 +66,14 @@ class TxQuality {
   final Map<String, int> frequencyPerYear;
   final Map<String, int> frequencyPerMonth;
   final double failureRate;
-  final double avgTxValue;
+
+  final double avgTxValueUsd;
 
   TxQuality({
     required this.frequencyPerYear,
     required this.frequencyPerMonth,
     required this.failureRate,
-    required this.avgTxValue,
+    required this.avgTxValueUsd,
   });
 
   factory TxQuality.fromMap(Map<String, dynamic> map) {
@@ -72,7 +87,8 @@ class TxQuality {
               ?.cast<String, int>() ??
           {},
       failureRate: map['failure_rate']?.toDouble() ?? 0.0,
-      avgTxValue: map['avg_tx_value']?.toDouble() ?? 0.0,
+
+      avgTxValueUsd: map['avg_tx_value_usd']?.toDouble() ?? 0.0,
     );
   }
 }
@@ -96,20 +112,20 @@ class Diversification {
 
 class WalletAge {
   final int walletAgeDays;
-  final int dormantMonths;
-  final double activityBurstPenalty;
+  final String firstTxDate;
+  final String lastTxDate;
 
   WalletAge({
     required this.walletAgeDays,
-    required this.dormantMonths,
-    required this.activityBurstPenalty,
+    required this.firstTxDate,
+    required this.lastTxDate,
   });
 
   factory WalletAge.fromMap(Map<String, dynamic> map) {
     return WalletAge(
       walletAgeDays: map['wallet_age_days'] ?? 0,
-      dormantMonths: map['dormant_months'] ?? 0,
-      activityBurstPenalty: map['activity_burst_penalty']?.toDouble() ?? 0.0,
+      firstTxDate: map['first_tx_date'],
+      lastTxDate: map['last_tx_date'],
     );
   }
 }
@@ -134,25 +150,57 @@ class GasUsage {
   }
 }
 
-class LiquidityLockup {
-  final double totalBalance;
-  final double liquidBalance;
-  final double lockedUpBalance;
-  final double lockupRatio;
+class TotalBalance {
+  final double totalBalanceUsd;
 
-  LiquidityLockup({
-    required this.totalBalance,
-    required this.liquidBalance,
-    required this.lockedUpBalance,
-    required this.lockupRatio,
+  TotalBalance({required this.totalBalanceUsd});
+
+  factory TotalBalance.fromMap(Map<String, dynamic> map) {
+    return TotalBalance(
+      totalBalanceUsd: map['total_balance_usd']?.toDouble() ?? 0.0,
+    );
+  }
+}
+
+class IncomingOutgoing {
+  final int incomingCount;
+  final int outgoingCount;
+  final double incomingValueUsd;
+  final double outgoingValueUsd;
+  final double? ioCountRatio;
+  final double? ioValueRatio;
+
+  IncomingOutgoing({
+    required this.incomingCount,
+    required this.outgoingCount,
+    required this.incomingValueUsd,
+    required this.outgoingValueUsd,
+    this.ioCountRatio,
+    this.ioValueRatio,
   });
 
-  factory LiquidityLockup.fromMap(Map<String, dynamic> map) {
-    return LiquidityLockup(
-      totalBalance: map['total_balance']?.toDouble() ?? 0.0,
-      liquidBalance: map['liquid_balance']?.toDouble() ?? 0.0,
-      lockedUpBalance: map['locked_up_balance']?.toDouble() ?? 0.0,
-      lockupRatio: map['lockup_ratio']?.toDouble() ?? 0.0,
+  factory IncomingOutgoing.fromMap(Map<String, dynamic> map) {
+    return IncomingOutgoing(
+      incomingCount: map['incoming_count'] ?? 0,
+      outgoingCount: map['outgoing_count'] ?? 0,
+      incomingValueUsd: map['incoming_value_usd']?.toDouble() ?? 0.0,
+      outgoingValueUsd: map['outgoing_value_usd']?.toDouble() ?? 0.0,
+      ioCountRatio: map['io_count_ratio']?.toDouble(),
+      ioValueRatio: map['io_value_ratio']?.toDouble(),
+    );
+  }
+}
+
+class InterTransactionTime {
+  final double? avgInterTxSeconds;
+  final double? stdInterTxSeconds;
+
+  InterTransactionTime({this.avgInterTxSeconds, this.stdInterTxSeconds});
+
+  factory InterTransactionTime.fromMap(Map<String, dynamic> map) {
+    return InterTransactionTime(
+      avgInterTxSeconds: map['avg_inter_tx_seconds']?.toDouble(),
+      stdInterTxSeconds: map['std_inter_tx_seconds']?.toDouble(),
     );
   }
 }

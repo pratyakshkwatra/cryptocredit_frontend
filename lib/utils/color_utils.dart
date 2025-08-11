@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 Map<String, dynamic> getElegantColors(int score) {
   int maxScore = 900;
-  if (score < (maxScore * 0.40)) {
+  if (score < (maxScore * 0.25)) {
     return {
       "gradientColors": [const Color(0xFF2A1F1D), const Color(0xFF121212)],
       "primaryColor": const Color(0xFFD16B6B),
@@ -14,7 +14,7 @@ Map<String, dynamic> getElegantColors(int score) {
       "tileBorder": Colors.transparent,
       "tileShadow": Colors.black.withAlpha(26),
     };
-  } else if (score < (maxScore * 0.60)) {
+  } else if (score < (maxScore * 0.50)) {
     return {
       "gradientColors": [const Color(0xFF2E241E), const Color(0xFF121212)],
       "primaryColor": const Color(0xFFE08F62),
@@ -38,7 +38,7 @@ Map<String, dynamic> getElegantColors(int score) {
       "tileBorder": Colors.transparent,
       "tileShadow": Colors.black.withAlpha(26),
     };
-  } else if (score < (maxScore * 0.90)) {
+  } else if (score <= (maxScore * 1)) {
     return {
       "gradientColors": [const Color(0xFF1E2A21), const Color.fromARGB(255, 18, 18, 18)],
       "primaryColor": const Color(0xFFA9D18E),

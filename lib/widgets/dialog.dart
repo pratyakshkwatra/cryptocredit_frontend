@@ -99,7 +99,7 @@ void showDataDialog(
                     ),
                     labeledText(
                       'Average Tx Value',
-                      (score.details.txQuality.avgTxValue.toStringAsFixed(2)),
+                      (score.details.txQuality.avgTxValueUsd.toStringAsFixed(2)),
                       icon: CryptoFontIcons.fromSymbol(chain.iconName),
                     ),
 
@@ -125,12 +125,12 @@ void showDataDialog(
                       "${score.details.walletAge.walletAgeDays} days",
                     ),
                     labeledText(
-                      'Dormant Months',
-                      score.details.walletAge.dormantMonths.toString(),
+                      'First Tx Date',
+                      score.details.walletAge.firstTxDate.toString(),
                     ),
                     labeledText(
-                      'Activity Burst Penalty',
-                      score.details.walletAge.activityBurstPenalty.toString(),
+                      'Last Tx Date',
+                      score.details.walletAge.lastTxDate.toString(),
                     ),
                     const SizedBox(height: 12),
                     Divider(color: colors["primaryColor"]),
@@ -160,20 +160,7 @@ void showDataDialog(
                     sectionHeader('Liquidity Lockup'),
                     labeledText(
                       'Total Balance',
-                      "\$${NumberFormat.compact().format(score.details.liquidityLockup.totalBalance)}",
-                    ),
-                    labeledText(
-                      'Liquid Balance',
-                      "\$${NumberFormat.compact().format(score.details.liquidityLockup.liquidBalance)}",
-                    ),
-                    labeledText(
-                      'Locked Up Balance',
-                      "\$${NumberFormat.compact().format(score.details.liquidityLockup.lockedUpBalance)}",
-                    ),
-                    labeledText(
-                      'Lockup Ratio',
-                      (score.details.liquidityLockup.lockupRatio as num)
-                          .toStringAsFixed(2),
+                      "\$${NumberFormat.compact().format(score.details.totalBalance.totalBalanceUsd)}",
                     ),
                     const SizedBox(height: 12),
                   ],

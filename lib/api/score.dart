@@ -16,7 +16,7 @@ class ScoreAPI {
     try {
       final response = await _dio.post(
         '/score/',
-        data: {'address': address, 'chain': chain, 'tx_limit': 10},
+        data: {'address': address, 'chain': chain, 'tx_limit': 25},
         options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
       );
 

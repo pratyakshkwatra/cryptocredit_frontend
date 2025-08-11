@@ -1,6 +1,8 @@
+import 'package:cryptocredit/api/auth.dart';
 import 'package:cryptocredit/api/chains.dart';
 import 'package:cryptocredit/api/models/chain.dart';
 import 'package:cryptocredit/api/models/user.dart';
+import 'package:cryptocredit/screens/auth/login.dart';
 import 'package:cryptocredit/screens/wallets.dart';
 import 'package:cryptocredit/services/auth.dart';
 import 'package:cryptofont/cryptofont.dart';
@@ -103,30 +105,71 @@ class _HomeScreenState extends State<HomeScreen>
                       padding: const EdgeInsets.only(
                         left: 16,
                         right: 16,
-                        bottom: 12,
+                        bottom: 16,
+                        top: 0,
                       ),
-                      child: Container(
-                        height: 44,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        alignment: Alignment.center,
-                        child: TextField(
-                          controller: _searchController,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            height: 48,
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.08),
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.25),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            alignment: Alignment.center,
+                            child: TextField(
+                              controller: _searchController,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                              decoration: InputDecoration(
+                                hintText: 'Search headers and chains...',
+                                hintStyle: const TextStyle(
+                                  color: Colors.white54,
+                                ),
+                                border: InputBorder.none,
+                                isDense: true,
+                                icon: Icon(
+                                  Icons.search,
+                                  color: Colors.white.withValues(alpha: 0.5),
+                                ),
+                              ),
+                              cursorColor: Colors.white,
+                            ),
                           ),
-                          decoration: const InputDecoration(
-                            hintText: 'Search headers and chains...',
-                            hintStyle: TextStyle(color: Colors.white54),
-                            border: InputBorder.none,
-                            isDense: true,
+                          GestureDetector(
+                            onTap: () async {
+                              await AuthAPI().logout(widget.user.refreshToken!, widget.user.accessToken!,);
+                              if (context.mounted) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return LoginScreen(
+                                        authService: widget.authService,
+                                      );
+                                    },
+                                  ),
+                                );
+                              }
+                            },
+                            child: Icon(
+                              Icons.logout,
+                              color: Colors.white.withValues(alpha: 0.5),
+                            ),
                           ),
-                          cursorColor: Colors.white,
-                        ),
+                        ],
                       ),
                     ),
 
@@ -186,19 +229,35 @@ class _HomeScreenState extends State<HomeScreen>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(bottom: 8),
-                                    child: Text(
-                                      header.title,
-                                      style: TextStyle(
-                                        color: Colors.white.withValues(
-                                          alpha: 0.9,
+                                    padding: EdgeInsets.only(
+                                      bottom: 12,
+                                      top: 8,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.category,
+                                          color: Colors.white.withValues(
+                                            alpha: 0.85,
+                                          ),
+                                          size: 20,
                                         ),
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: 1.1,
-                                      ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          header.title,
+                                          style: TextStyle(
+                                            color: Colors.white.withValues(
+                                              alpha: 0.9,
+                                            ),
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
+                                            letterSpacing: 1.05,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
+
                                   GridView.builder(
                                     physics:
                                         const NeverScrollableScrollPhysics(),
@@ -261,35 +320,42 @@ class _HomeScreenState extends State<HomeScreen>
                                             child: Container(
                                               height: 128,
                                               decoration: BoxDecoration(
-                                                color: const Color(0xFF1C1C1C),
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    Colors.white.withValues(
+                                                      alpha: 0.05,
+                                                    ),
+                                                    Colors.white.withValues(
+                                                      alpha: 0.02,
+                                                    ),
+                                                  ],
+                                                  begin: Alignment.topLeft,
+                                                  end: Alignment.bottomRight,
+                                                ),
                                                 borderRadius:
-                                                    BorderRadius.circular(16),
+                                                    BorderRadius.circular(18),
+                                                border: Border.all(
+                                                  color: Colors.white
+                                                      .withValues(alpha: 0.06),
+                                                  width: 1,
+                                                ),
                                                 boxShadow: [
                                                   BoxShadow(
-                                                    color: Colors.grey.shade900
-                                                        .withValues(alpha: 0.1),
-                                                    blurRadius: 8,
-                                                    offset: const Offset(0, 4),
+                                                    color: Colors.black
+                                                        .withValues(
+                                                          alpha: 0.15,
+                                                        ),
+                                                    blurRadius: 12,
+                                                    offset: const Offset(0, 6),
                                                   ),
                                                 ],
-                                                border: Border.all(
-                                                  color: Colors.grey.shade800
-                                                      .withValues(alpha: 0.6),
-                                                  width: 1.2,
-                                                ),
                                               ),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 16,
-                                                    vertical: 16,
-                                                  ),
+                                              padding: const EdgeInsets.all(14),
                                               alignment: Alignment.center,
                                               child: Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
                                                         .spaceEvenly,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
                                                 children: [
                                                   Icon(
                                                     CryptoFontIcons.fromSymbol(
@@ -297,20 +363,19 @@ class _HomeScreenState extends State<HomeScreen>
                                                         ) ??
                                                         Icons.diamond,
                                                     color: Colors.white,
-                                                    size: 28,
+                                                    size: 30,
                                                   ),
                                                   Text(
                                                     ReCase(
                                                       chain.name,
                                                     ).titleCase,
-                                                    maxLines: 1,
+                                                    maxLines: 2,
                                                     textAlign: TextAlign.center,
-                                                    softWrap: true,
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     style: GoogleFonts.inter(
                                                       color: Colors.white,
-                                                      fontSize: 16,
+                                                      fontSize: 15,
                                                     ),
                                                   ),
                                                 ],

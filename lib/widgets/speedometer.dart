@@ -16,13 +16,14 @@ class Speedometer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SpeedometerChart(
+    return SpeedometerChart.tick(
       dimension: size,
       minValue: 0,
       maxValue: 900,
       value: score.toDouble(),
-      graphColor: List<Color>.from(colors["speedometerColors"]),
+      // graphColor: List<Color>.from(colors["speedometerColors"]),
       pointerColor: colors["pointerColor"],
+      hasTickSpace: true,
       valueWidget: Text(
         "$score / 900",
         style: GoogleFonts.inter(
