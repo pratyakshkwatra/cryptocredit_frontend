@@ -19,12 +19,12 @@ class Speedometer extends StatelessWidget {
     return SpeedometerChart(
       dimension: size,
       minValue: 0,
-      maxValue: 100,
+      maxValue: 900,
       value: score.toDouble(),
       graphColor: List<Color>.from(colors["speedometerColors"]),
       pointerColor: colors["pointerColor"],
       valueWidget: Text(
-        "$score / 100",
+        "$score / 900",
         style: GoogleFonts.inter(
           fontSize: size * 0.08,
           fontWeight: FontWeight.w600,

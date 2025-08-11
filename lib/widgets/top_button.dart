@@ -6,6 +6,7 @@ class TopButton extends StatelessWidget {
   final String? label;
   final Map<String, dynamic> colors;
   final double borderRadius;
+  final bool dense;
 
   const TopButton({
     super.key,
@@ -13,6 +14,7 @@ class TopButton extends StatelessWidget {
     this.label,
     required this.colors,
     required this.borderRadius,
+    required this.dense,
   });
 
   @override
@@ -30,11 +32,10 @@ class TopButton extends StatelessWidget {
           ),
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: dense ? 4 : 8),
       child: Row(
         children: [
-          if (icon != null)
-            Icon(icon, color: colors["primaryColor"], size: 18),
+          if (icon != null) Icon(icon, color: colors["primaryColor"], size: 18),
           if (label != null) ...[
             if (icon != null) const SizedBox(width: 6),
             Text(

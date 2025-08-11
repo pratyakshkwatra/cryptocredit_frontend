@@ -1,12 +1,12 @@
 import 'package:cryptocredit/api/chains.dart';
 import 'package:cryptocredit/api/models/chain.dart';
 import 'package:cryptocredit/api/models/user.dart';
+import 'package:cryptocredit/screens/wallets.dart';
 import 'package:cryptocredit/services/auth.dart';
 import 'package:cryptofont/cryptofont.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:recase/recase.dart';
-import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   final AuthService authService;
@@ -17,23 +17,35 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
+
+  late AnimationController _animationController;
 
   @override
   void initState() {
     super.initState();
+
     _searchController.addListener(() {
       setState(() {
         _searchQuery = _searchController.text.trim().toLowerCase();
       });
     });
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 8),
+    );
+
+    _animationController.forward();
   }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -42,6 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final backgroundGradient = [
       const Color(0xFF2D1B4E),
       const Color(0xFF1A102F),
+      const Color.fromARGB(255, 11, 10, 15),
+      const Color.fromARGB(255, 17, 13, 27),
       Colors.black,
     ];
 
@@ -62,22 +76,14 @@ class _HomeScreenState extends State<HomeScreen> {
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Center(
-                  child: Shimmer.fromColors(
-                    baseColor: const Color(0xFF1A102F),
-                    highlightColor: const Color(0xFF3E2C72),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF2D1B4E),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
+                  child: CircularProgressIndicator(
+                    strokeWidth: 8,
+                    color: const Color(0xFF6A11CB),
+                    strokeCap: StrokeCap.round,
                   ),
                 );
               } else {
                 final chainsHeaders = snapshot.data!;
-
                 final filteredHeaders = chainsHeaders.where((header) {
                   final headerMatch = header.title.toLowerCase().contains(
                     _searchQuery,
@@ -136,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Colors.black,
                               Colors.transparent,
                             ],
-                            stops: const [0.0, 0.02, 0.95, 1.0],
+                            stops: const [0.0, 0.01, 0.95, 1.0],
                           ).createShader(rect);
                         },
                         blendMode: BlendMode.dstIn,
@@ -145,7 +151,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemCount: filteredHeaders.length,
                           itemBuilder: (context, index) {
                             final header = filteredHeaders[index];
-
                             final filteredChains = _searchQuery.isEmpty
                                 ? header.chains
                                 : header.chains
@@ -161,104 +166,176 @@ class _HomeScreenState extends State<HomeScreen> {
                               return const SizedBox.shrink();
                             }
 
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 8),
-                                  child: Text(
-                                    header.title,
-                                    style: TextStyle(
-                                      color: Colors.white.withValues(
-                                        alpha: 0.9,
+                            final double headerStart =
+                                index / filteredHeaders.length;
+                            final double headerEnd =
+                                (index + 1) / filteredHeaders.length;
+
+                            final headerAnimation = CurvedAnimation(
+                              parent: _animationController,
+                              curve: Interval(
+                                headerStart,
+                                headerEnd,
+                                curve: Curves.easeOut,
+                              ),
+                            );
+
+                            return FadeTransition(
+                              opacity: headerAnimation,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 8),
+                                    child: Text(
+                                      header.title,
+                                      style: TextStyle(
+                                        color: Colors.white.withValues(
+                                          alpha: 0.9,
+                                        ),
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 1.1,
                                       ),
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 1.1,
                                     ),
                                   ),
-                                ),
-
-                                GridView.builder(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemCount: filteredChains.length,
-                                  padding: const EdgeInsets.only(bottom: 8),
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 3,
-                                        crossAxisSpacing: 12,
-                                        mainAxisSpacing: 12,
-                                        childAspectRatio: 1,
-                                      ),
-                                  itemBuilder: (context, chainIndex) {
-                                    final chain = filteredChains[chainIndex];
-                                    return Container(
-                                      height: 128,
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            Colors.black,
-                                            Colors.black.withValues(
-                                              alpha: 0.75,
-                                            ),
-                                          ],
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
+                                  GridView.builder(
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: filteredChains.length,
+                                    padding: const EdgeInsets.only(bottom: 8),
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 3,
+                                          crossAxisSpacing: 12,
+                                          mainAxisSpacing: 12,
+                                          childAspectRatio: 1,
                                         ),
-                                        borderRadius: BorderRadius.circular(16),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.shade900
-                                                .withValues(alpha: 0.1),
-                                            blurRadius: 8,
-                                            offset: const Offset(0, 4),
-                                          ),
-                                        ],
-                                        border: Border.all(
-                                          color: Colors.grey.shade800
-                                              .withValues(alpha: 0.6),
-                                          width: 1.2,
+                                    itemBuilder: (context, chainIndex) {
+                                      final chain =
+                                          filteredChains[chainIndex];
+                              
+                                      final double itemStart =
+                                          headerStart +
+                                          (headerEnd - headerStart) *
+                                              (chainIndex /
+                                                  filteredChains.length);
+                                      final double itemEnd =
+                                          headerStart +
+                                          (headerEnd - headerStart) *
+                                              ((chainIndex + 1) /
+                                                  filteredChains.length);
+                              
+                                      final itemAnimation = CurvedAnimation(
+                                        parent: _animationController,
+                                        curve: Interval(
+                                          itemStart.clamp(0.0, 1.0),
+                                          itemEnd.clamp(0.0, 1.0),
+                                          curve: Curves.easeOut,
                                         ),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 16,
-                                        vertical: 16,
-                                      ),
-                                      alignment: Alignment.center,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            CryptoFontIcons.fromSymbol(
-                                                  chain.iconName,
-                                                ) ??
-                                                Icons.diamond,
-                                            color: Colors.white,
-                                            size: 28,
-                                          ),
-                                          Text(
-                                            ReCase(chain.name).titleCase,
-                                            maxLines: 1,
-                                            textAlign: TextAlign.center,
-                                            softWrap: true,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: GoogleFonts.inter(
-                                              color: Colors.white,
-                                              fontSize: 16,
+                                      );
+                              
+                                      return FadeTransition(
+                                        opacity: itemAnimation,
+                                        child: SlideTransition(
+                                          position: Tween<Offset>(
+                                            begin: const Offset(0, 0.2),
+                                            end: Offset.zero,
+                                          ).animate(itemAnimation),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) {
+                                                    return WalletsScreen(
+                                                      authService:
+                                                          widget.authService,
+                                                      chain: chain,
+                                                      user: widget.user,
+                                                    );
+                                                  },
+                                                ),
+                                              );
+                                            },
+                                            child: Container(
+                                              height: 128,
+                                              decoration: BoxDecoration(
+                                                color: const Color(
+                                                  0xFF1C1C1C,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(16),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors
+                                                        .grey
+                                                        .shade900
+                                                        .withValues(
+                                                          alpha: 0.1,
+                                                        ),
+                                                    blurRadius: 8,
+                                                    offset: const Offset(
+                                                      0,
+                                                      4,
+                                                    ),
+                                                  ),
+                                                ],
+                                                border: Border.all(
+                                                  color: Colors.grey.shade800
+                                                      .withValues(alpha: 0.6),
+                                                  width: 1.2,
+                                                ),
+                                              ),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 16,
+                                                    vertical: 16,
+                                                  ),
+                                              alignment: Alignment.center,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Icon(
+                                                    CryptoFontIcons.fromSymbol(
+                                                          chain.iconName,
+                                                        ) ??
+                                                        Icons.diamond,
+                                                    color: Colors.white,
+                                                    size: 28,
+                                                  ),
+                                                  Text(
+                                                    ReCase(
+                                                      chain.name,
+                                                    ).titleCase,
+                                                    maxLines: 1,
+                                                    textAlign:
+                                                        TextAlign.center,
+                                                    softWrap: true,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: GoogleFonts.inter(
+                                                      color: Colors.white,
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-
-                                const SizedBox(height: 12),
-                              ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                              
+                                  const SizedBox(height: 12),
+                                ],
+                              ),
                             );
                           },
                         ),

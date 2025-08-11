@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:cryptocredit/api/models/user.dart';
 import 'package:dio/dio.dart';
@@ -55,7 +54,6 @@ class AuthAPI {
 
   Future<User?> refreshToken() async {
     final refreshToken = await _storage.read(key: 'refresh_token');
-    log("test");
     if (refreshToken == null) return null;
 
     try {
