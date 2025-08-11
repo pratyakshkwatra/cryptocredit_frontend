@@ -1,4 +1,3 @@
-
 import 'package:cryptocredit/api/models/user.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -72,11 +71,14 @@ class AuthAPI {
     }
   }
 
-  Future<void> logout(String refreshToken) async {
+  Future<void> logout(String refreshToken, String accessToken) async {
     await _dio.post(
       '/auth/sign_out',
-      data: {'refresh_token': refreshToken},
-      options: Options(contentType: Headers.formUrlEncodedContentType),
+      queryParameters: {
+        'refresh_token': refreshToken,
+        "access_token": accessToken,
+      },
+      options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
     );
     await _storage.deleteAll();
   }
