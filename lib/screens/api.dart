@@ -221,7 +221,18 @@ class _APIKeysScreenState extends State<APIKeysScreen> {
                   Clipboard.setData(ClipboardData(text: key));
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Copied to clipboard")),
+                    SnackBar(
+                      content: Text(
+                        "Copied to clipboard",
+                        style: GoogleFonts.poppins(color: Colors.white),
+                      ),
+                      backgroundColor: Colors.deepPurpleAccent,
+                      behavior: SnackBarBehavior.fixed,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      duration: const Duration(seconds: 3),
+                    ),
                   );
                 },
                 icon: const Icon(Icons.copy, color: Colors.greenAccent),

@@ -17,6 +17,7 @@ The app is designed with a **clean**, **intuitive**, and **dark mode first** int
 * 📈 **Detailed Analytics** — Dive deep into the metrics that make up your score, including transaction quality, portfolio diversification, wallet age, gas usage, and more.
 * 📜 **Transaction History** — View a list of recent transactions from your linked wallets.
 * 📱 **Sleek & Responsive UI** — A modern, clean design built with Flutter for iOS and Android.
+* 👨‍💻 **Developer API** — Integrated API access for developers with key management and usage tracking.
 
 ---
 
@@ -59,6 +60,18 @@ The app is designed with a **clean**, **intuitive**, and **dark mode first** int
 | Analytics 1                             | Analytics 2                             |
 | --------------------------------------- | --------------------------------------- |
 | ![](assets/screenshots/analytics_1.png) | ![](assets/screenshots/analytics_2.png) |
+
+---
+
+### Developer API
+
+| API Home                             | API Expanded                             |
+| ------------------------------------ | ---------------------------------------- |
+| ![](assets/screenshots/api_home.png) | ![](assets/screenshots/api_expanded.png) |
+
+| Create API Key                         | Copy API Key                             |
+| -------------------------------------- | ---------------------------------------- |
+| ![](assets/screenshots/api_create.png) | ![](assets/screenshots/api_copy_key.png) |
 
 ---
 
@@ -120,5 +133,6 @@ flutter run
 > The system should encourage accountability and enable fairer financial decisions in the decentralized ecosystem.
 
 ---
-Made with 💜 by  [**Pratyaksh Kwatra**](https://github.com/pratyakshkwatra) & [**Aarav Rai**](https://github.com/Aarav-Rai)  
+
+Made with 💜 by  [**Pratyaksh Kwatra**](https://github.com/pratyakshkwatra) & [**Aarav Rai**](https://github.com/Aarav-Rai)
 Fueled by ☕, powered by 🚀, and sprinkled with a bit of ✨ magic.
