@@ -2,6 +2,7 @@ import 'package:cryptocredit/api/auth.dart';
 import 'package:cryptocredit/api/chains.dart';
 import 'package:cryptocredit/api/models/chain.dart';
 import 'package:cryptocredit/api/models/user.dart';
+import 'package:cryptocredit/screens/api.dart';
 import 'package:cryptocredit/screens/auth/login.dart';
 import 'package:cryptocredit/screens/wallets.dart';
 import 'package:cryptocredit/services/auth.dart';
@@ -112,8 +113,8 @@ class _HomeScreenState extends State<HomeScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            height: 48,
-                            width: MediaQuery.of(context).size.width * 0.8,
+                            height: 42,
+                            width: MediaQuery.of(context).size.width * 0.78,
                             decoration: BoxDecoration(
                               color: Colors.white.withValues(alpha: 0.08),
                               borderRadius: BorderRadius.circular(16),
@@ -148,26 +149,94 @@ class _HomeScreenState extends State<HomeScreen>
                               cursorColor: Colors.white,
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () async {
-                              await AuthAPI().logout(widget.user.refreshToken!, widget.user.accessToken!,);
-                              if (context.mounted) {
+                          PopupMenuButton<String>(
+                            color: Color(0xFF2D1B4E).withValues(alpha: 1),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+
+                            menuPadding: EdgeInsets.only(),
+                            padding: EdgeInsetsGeometry.all(0),
+                            icon: CircleAvatar(
+                              backgroundColor: Colors.white.withValues(
+                                alpha: 0.08,
+                              ),
+                              child: Icon(
+                                Icons.person,
+                                color: Colors.white.withValues(alpha: 0.5),
+                              ),
+                            ),
+                            onSelected: (value) async {
+                              if (value == 'api_keys') {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) {
-                                      return LoginScreen(
-                                        authService: widget.authService,
-                                      );
+                                      return APIKeysScreen(user: widget.user);
                                     },
                                   ),
                                 );
+                              } else if (value == 'logout') {
+                                await AuthAPI().logout(
+                                  widget.user.refreshToken!,
+                                  widget.user.accessToken!,
+                                );
+                                if (context.mounted) {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return LoginScreen(
+                                          authService: widget.authService,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                }
                               }
                             },
-                            child: Icon(
-                              Icons.logout,
-                              color: Colors.white.withValues(alpha: 0.5),
-                            ),
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                value: 'api_keys',
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.key, color: Colors.white),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      "API Keys",
+                                      style: TextStyle(
+                                        color: Colors.white.withValues(
+                                          alpha: 0.9,
+                                        ),
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 1.05,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              PopupMenuItem(
+                                value: 'logout',
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.logout, color: Colors.white),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      "Logout",
+                                      style: TextStyle(
+                                        color: Colors.white.withValues(
+                                          alpha: 0.9,
+                                        ),
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 1.05,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
